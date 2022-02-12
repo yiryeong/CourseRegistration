@@ -9,6 +9,8 @@ gem 'devise-i18n'
 gem 'bootstrap'
 gem 'font-awesome-rails'
 
+gem 'rails_admin'
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.2"
 
@@ -76,3 +78,4 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+gem "sassc-rails"
