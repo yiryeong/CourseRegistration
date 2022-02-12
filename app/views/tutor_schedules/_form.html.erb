@@ -1,0 +1,32 @@
+<%= form_with(model: tutor_schedule) do |form| %>
+  <% if tutor_schedule.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(tutor_schedule.errors.count, "error") %> prohibited this tutor_schedule from being saved:</h2>
+
+      <ul>
+        <% tutor_schedule.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :tutor_id, style: "display: block" %>
+    <%= form.select :tutor_id, options_for_select(Tutor.all.map{|s|[s.name, s.id]}) %>
+  </div>
+  <br>
+  <div>
+    <%= form.label :start_time, style: "display: block" %>
+    <%= form.datetime_field :start_time %>
+  </div>
+  <br>
+  <div>
+    <%= form.label :active, style: "display: block" %>
+    <%= form.text_field :active %>
+  </div>
+  <br>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

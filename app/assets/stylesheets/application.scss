@@ -13,3 +13,22 @@
  *= require_tree .
  *= require_self
  */
+
+@import "bootstrap";
+@import "font-awesome";
+
+.ver-line{
+  border: 1px solid black;
+  width: 1px;
+  height: 1000px;
+}
+
+.content{
+  margin: 30px;
+}
+
+.home{
+  margin-left: 50px;
+  margin-top:10px;
+  margin-bottom: 10px
+}

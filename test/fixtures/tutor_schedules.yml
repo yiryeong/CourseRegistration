@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tutor: one
+  start_time: 2022-02-12 15:50:36
+  active: false
+
+two:
+  tutor: two
+  start_time: 2022-02-12 15:50:36
+  active: false
