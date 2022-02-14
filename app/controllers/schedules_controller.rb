@@ -4,34 +4,37 @@ class SchedulesController < ApplicationController
   # GET /student/lessons/schedule-enter
   def index
     @tutors = Tutor.all
-    @tutor_schedules = TutorSchedule.all
     @today = Date.today
+    lessons_type = params[:lesson_type]
 
-    if params[:lesson_type].present?
-      @lessons_type = params[:lesson_type]
-    end
+    search_params = Hash.new
+    search_params["start_time"] = @today.to_datetime.at_beginning_of_week..@today.to_datetime.at_end_of_week
+
     if params[:tutor].present?
-      @tutor_id = params[:tutor]
-      @tutor_name = Tutor.find(@tutor_id).name
-      @schedules = TutorSchedule.where(tutor_id: params[:tutor])
-    end
-    if params[:select_datetime].present?
-      # @schedules = TutorSchedule.where("start_time >= ?": Date.today.at_beginning_of_week))
-      @schedules = TutorSchedule.where("start_time >= :start_date AND start_time <= :end_date",
-            {:start_date => @today.at_beginning_of_week, :end_date =>@today.at_end_of_week})
-
-      # @schedules.each_with_index { |schedule, i|
-      #   tutor = Tutor.find(schedule[:tutor_id])
-      #   schedule.tutor_name = tutor.name
-      #   # schedule.store(:tutor_name, tutor.name)
-      #   puts(schedule)
-      # }
+      unless params[:tutor].empty?
+        search_params["tutor_id"] = params[:tutor]
+        @tutor_name = Tutor.find(params[:tutor]).name
+      end
     end
 
-    # TutorSchedule.where("start_time >= :start_date AND start_time <= :end_date",
-    #   {:start_date => Date.today.at_beginning_of_week, :end_date => Date.today.at_end_of_week})
-    #   {:start_date => params[:select_datetime].at_beginning_of_week, :end_date => Date.today.at_end_of_week})
-    # @reserved_schedules = Schedule.where(user_id: session[:user_id])
+    if params[:select_date].present?
+      unless params[:select_date].empty?
+        search_params["start_time"] = @today.to_datetime.at_beginning_of_week..@today.to_datetime.at_end_of_week
+      end
+    end
+
+    unless search_params.empty?
+      @response = TutorSchedule.where(search_params)
+      @schedules = Array.new
+
+      @response.each do |schedule|
+        tutor_id = schedule.tutor_id
+        schedule = schedule.as_json
+        schedule['tutor_name'] = Tutor.find(tutor_id).name
+        @schedules.append(schedule)
+      end
+    end
+
   end
 
   # GET /student/lessons/schedule-enter/1
