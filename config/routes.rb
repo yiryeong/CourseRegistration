@@ -17,5 +17,7 @@ Rails.application.routes.draw do
   resources :tutors
 
   get "/home" => "home#index", as: "home"
-  get "/student/lessons/schedule-enter" => "schedule#index"
+  get "/student/lessons/schedule-enter" => "schedules#index"
+  post "/student/lessons/schedule-enter" => "schedules#create"
+
 end

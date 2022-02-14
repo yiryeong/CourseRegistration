@@ -12,6 +12,7 @@ module CourseRegistration
     config.load_defaults 7.0
 
     config.i18n.default_locale = :ko
+    # config.beginning_of_week = :sunday
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

@@ -17,6 +17,7 @@
 @import "bootstrap";
 @import "font-awesome";
 
+
 .ver-line{
   border: 1px solid black;
   width: 1px;
@@ -30,5 +31,40 @@
 .home{
   margin-left: 50px;
   margin-top:10px;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
+
+.mode{
+  border-radius: 10px;
+  padding:32px 45px 35px;
+}
+
+
+.content{
+  width: 100%;
+  height: 100%;
+}
+
+.search{
+  padding: 30px;
+  border: 1px solid black;
+  border-radius: 50px;
+}
+
+.calendar-week-table{
+  padding: 30px;
+  border: 1px solid black;
+  border-radius: 50px;
+  margin-left: 30px;
+  height: 100%;
+}
+
+
+.bbs_table{width:100%;border:1px solid #d0d4d9;line-height:16px;/* IE7 수정 */*border-right:0/* IE7 수정 */}
+.bbs_table th:first-child,.bbs_tbl_type2 td:first-child{border-left:0}
+.bbs_table th{padding:10px 9px 7px;border-width:0 0 0 1px;border-color:#dcdee2;border-style:solid;text-align:center;background-color:#eff0f2;color:#333}
+.bbs_table td{height:10px;border-width:1px 0 0 1px;border-color:#edeef0 #dcdee2;border-style:solid;text-align:center;line-height:20px;color:#666;/* IE7 수정 */*border-left:0;*border-top:0;*border-bottom:1px solid #edeef0;*border-right:1px solid #dcdee2;/* IE7 수정 */}
+.bbs_table td input[type=text],.bbs_tbl_type2 td select,.bbs_tbl_type2 td a.fron{margin:-6px 0 -2px}
+.bbs_table td:hover{border:1px solid #666 !important}
+.bbs_table tr:first-child td{border-top:1px solid #dcdee2}
+.bbs_table tr:first-child td:hover{border-top:1px solid #666 !important}

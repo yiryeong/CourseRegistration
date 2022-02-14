@@ -3,13 +3,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.0"
 
+# devise
 gem 'devise'
 gem 'devise-i18n'
 
+# bootstrap
 gem 'bootstrap'
 gem 'font-awesome-rails'
 
+# RailsAdmin
 gem 'rails_admin'
+
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.2"
