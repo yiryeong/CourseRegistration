@@ -33,13 +33,21 @@ class SchedulesController < ApplicationController
     # schedule.start_time = params[:start_time]
     # schedule.lesson_type = params[:lesson_type]
     # schedule.save
+    # @tutor_schedule = TutorSchedule.where(tutor_id: schedule.tutor_id, start_time: schedule.start_time)
+    # @tutor_schedule.update(active: 2)
+    # redirect_to student_lessons_schedule_enter_url(@reserved_schedule), notice: "Schedule was successfully created."
+
     @reserved_schedule = Schedule.new(schedule_params)
 
-    respond_to do |format|
-      if @reserved_schedule.save
+    if @reserved_schedule.save
+      @tutor_schedule = TutorSchedule.where(tutor_id: @reserved_schedule.tutor_id, start_time: @reserved_schedule.start_time)
+      @tutor_schedule.update(active: 2)
+      respond_to do |format|
         format.html { redirect_to student_lessons_schedule_enter_url(@reserved_schedule), notice: "Schedule was successfully created." }
         format.json { render :show, status: :created, location: @reserved_schedule }
-      else
+      end
+    else
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @reserved_schedule.errors, status: :unprocessable_entity }
       end
@@ -55,6 +63,6 @@ class SchedulesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def schedule_params
-      params.require(:schedule).permit(:tutor_id, :user_id, :start_time, :lesson_type)
+      params.permit(:tutor_id, :user_id, :start_time, :lesson_type)
     end
 end

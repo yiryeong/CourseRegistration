@@ -79,7 +79,7 @@
               <td> <%= schedule.start_time %> </td>
               <% if schedule.active === 1 %>
                 <td> Available </td>
-                <td><%= button_to '예약하기', student_lessons_schedule_enter_path, params: {tutor_id: schedule.tutor_id, lesson_type: @lessons_type, start_time: schedule.start_time, user_id: current_user.id} %></td>
+                <td><%= button_to '예약하기', student_lessons_schedule_enter_path, method: :post, params: {tutor_id: schedule.tutor_id, lesson_type: @lessons_type, start_time: schedule.start_time, user_id: current_user.id} %></td>
               <% else %>
                 <td> Unavailable </td>
                 <td>예약 할 수 없음</td>
