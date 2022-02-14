@@ -3,62 +3,73 @@
 <%# elsif @mode=='tutor' %>
   <%#= render "schedule_by_tutor" %>
 <%# else %>
-<!--<div class="container">-->
-<!--  <div class="row">-->
-<!--    <div class="col col-5">-->
-<!--      <div class="shadow-sm bg-write mode">-->
-<!--        <img src="/assets/time-first.svg" style="width: 42px; margin-bottom: 13px;">-->
-<!--        <br>-->
-<!--        <div class="text-h3 font-medium" style="margin-bottom: 5px;">시간 먼저 선택</div>-->
-<!--        <br>-->
-<!--        <div>원하는 수업 시간을 먼저 선택할 수 있습니다.</div>-->
-<!--        <br>-->
-<!--        <a href="?mode=time">예약하기</a>-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col col-5">-->
+<!--        <div class="shadow-sm bg-write mode">-->
+<!--          <img src="/assets/time-first.svg" style="width: 42px; margin-bottom: 13px;">-->
+<!--          <br>-->
+<!--          <div class="text-h3 font-medium" style="margin-bottom: 5px;">시간 먼저 선택</div>-->
+<!--          <br>-->
+<!--          <div>원하는 수업 시간을 먼저 선택할 수 있습니다.</div>-->
+<!--          <br>-->
+<!--          <a href="?mode=time">예약하기</a>-->
+<!--        </div>-->
 <!--      </div>-->
-<!--    </div>-->
-<!--    <div class="col col-5">-->
-<!--      <div class="shadow-sm bg-write mode">-->
-<!--        <img src="/assets/tutor-first.svg" style="width: 42px; margin-bottom: 13px;">-->
-<!--        <br>-->
-<!--        <div class="text-h3" style="margin-bottom: 5px;">튜터 먼저 선택</div>-->
-<!--        <br>-->
-<!--        <div>원하는 튜터를 먼저 선택할 수 있습니다.</div>-->
-<!--        <br>-->
-<!--        <a href="?mode=tutor">예약하기</a>-->
+<!--      <div class="col col-5">-->
+<!--        <div class="shadow-sm bg-write mode">-->
+<!--          <img src="/assets/tutor-first.svg" style="width: 42px; margin-bottom: 13px;">-->
+<!--          <br>-->
+<!--          <div class="text-h3" style="margin-bottom: 5px;">튜터 먼저 선택</div>-->
+<!--          <br>-->
+<!--          <div>원하는 튜터를 먼저 선택할 수 있습니다.</div>-->
+<!--          <br>-->
+<!--          <a href="?mode=tutor">예약하기</a>-->
+<!--        </div>-->
 <!--      </div>-->
+
+<!--    </div><br><br>-->
+<!--    <div class="row">-->
+<!--      <h3> 예약 완료 테이블 </h3>-->
+<!--      <table class="bbs_table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th scope="col">튜터 이름</th>-->
+<!--          <th scope="col">수업 시작 시간</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+        <%# @reserved_schedules.each do |reserved_schedule| %>
+<!--          <tbody>-->
+<!--            <tr>-->
+<!--              <th> <%#= @tutor_name %></th>-->
+<!--              <th><%#= reserved_schedule.start_time %></th>-->
+<!--            </tr>-->
+<!--          </tbody>-->
+<!--        </table>-->
+        <%# end %>
 <!--    </div>-->
 <!--  </div>-->
-<!--</div>-->
-
-<!--<br><br><br>-->
 <%# end %>
+
+
 
 <div class="row">
   <div class="col col-4">
-    <form action="/student/lessons/schedule-enter?mode=tutor" mothod="GET">
+    <div class="col">
+<!--      <div class="row">-->
+<!--        <p>튜터 먼저 선택</p>-->
+        <%#= render "schedule_by_tutor" %>
+<!--      </div>-->
+<!--      <br><br>-->
+<!--      <div class="row">-->
+<!--        <p>시간 먼저 선택</p>-->
+        <%#= render "schedule_by_time" %>
+<!--      </div>-->
+<!--      <br><br>-->
       <div class="row">
-        <div class="col">
-          <div class="search">
-            <label style="width: 100px">수업 길이 선택:</label>
-            <select id="lessons_type" name="lesson_type" style="width: 200px" >
-              <option value="1">20분</option>
-              <option value="2">40분</option>
-            </select>
-            <br><br>
-            <label style="width: 100px"> 튜터 선택:</label>
-            <select name="tutor" id="tutor">
-              <option value="">튜터</option>
-              <% @tutors.each do |tutor| %>
-                <option value="<%= tutor.id %>"><%= tutor.name %></option>
-              <% end %>
-            </select>
-          </div>
-        </div>
-        <div class="col col-3" style="padding-top: 50px">
-          <button class="btn btn-outline-dark">검색</button>
-        </div>
+        <%= render "schedule_by_all" %>
       </div>
-    </form>
+    </div>
   </div>
   <br>
   <div class="col col-6">
@@ -89,15 +100,9 @@
         </tbody>
       <% else %>
         <tbody>
-          <tr><td>조회 데이터가 없습니다.</td></tr>
+          <tr> <td>조회 데이터가 없습니다. </td> </tr>
         </tbody>
       <% end %>
     </table>
-    <% if @reserved_schedule %>
-      <p><%= @reserved_schedule.tutor_id %></p>
-      <p><%= @reserved_schedule.user_id %></p>
-      <p><%= @reserved_schedule.start_time %></p>
-      <p><%= @reserved_schedule.lesson_type %></p>
-    <% end %>
   </div>
 </div>

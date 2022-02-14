@@ -1,5 +1,5 @@
 class SchedulesController < ApplicationController
-  # before_action :set_schedule, only: %i[ show edit update destroy ]
+  before_action :set_schedule, only: %i[ show edit update destroy ]
 
   # GET /student/lessons/schedule-enter
   def index
@@ -7,9 +7,6 @@ class SchedulesController < ApplicationController
     @tutor_schedules = TutorSchedule.all
     @today = Date.today
 
-    if params.has_key?(:mode)
-      @mode = params[:mode]
-    end
     if params[:lesson_type].present?
       @lessons_type = params[:lesson_type]
     end
@@ -18,6 +15,27 @@ class SchedulesController < ApplicationController
       @tutor_name = Tutor.find(@tutor_id).name
       @schedules = TutorSchedule.where(tutor_id: params[:tutor])
     end
+    if params[:select_datetime].present?
+      # @schedules = TutorSchedule.where("start_time >= ?": Date.today.at_beginning_of_week))
+      @schedules = TutorSchedule.where("start_time >= :start_date AND start_time <= :end_date",
+            {:start_date => @today.at_beginning_of_week, :end_date =>@today.at_end_of_week})
+
+      # @schedules.each_with_index { |schedule, i|
+      #   tutor = Tutor.find(schedule[:tutor_id])
+      #   schedule.tutor_name = tutor.name
+      #   # schedule.store(:tutor_name, tutor.name)
+      #   puts(schedule)
+      # }
+    end
+
+    # TutorSchedule.where("start_time >= :start_date AND start_time <= :end_date",
+    #   {:start_date => Date.today.at_beginning_of_week, :end_date => Date.today.at_end_of_week})
+    #   {:start_date => params[:select_datetime].at_beginning_of_week, :end_date => Date.today.at_end_of_week})
+    # @reserved_schedules = Schedule.where(user_id: session[:user_id])
+  end
+
+  # GET /student/lessons/schedule-enter/1
+  def show
   end
 
   # GET /student/lessons/schedule-enter/new

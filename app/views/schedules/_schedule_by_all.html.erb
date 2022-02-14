@@ -7,6 +7,9 @@
         <br><br>
         <%= form.label :select_date, "날짜 선택:" %>
         <%= form.date_field :select_date, min: @today, value: @today %>
+        <br><br>
+        <%= form.label :tutor, "튜터 선택:" %>
+        <%= form.collection_select :tutor, Tutor.order(:id), :id, :name %>
       </div>
     </div>
     <div class="col" style="padding-top: 80px">

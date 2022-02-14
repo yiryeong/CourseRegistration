@@ -1,61 +1,17 @@
-<div class="row">
-  <div class="col col-4">
-    <form action="/student/lessons/schedule-enter" mothod="GET">
-      <div class="row">
-        <div class="col">
-          <div class="search">
-            <label style="width: 100px">수업 길이 선택:</label>
-            <select id="lessons_type" name="lesson_type" style="width: 200px" >
-              <option value="1">20분</option>
-              <option value="2">40분</option>
-            </select>
-            <br><br>
-            <label style="width: 100px"> 튜터 선택:</label>
-            <select name="tutor" id="tutor">
-              <option value="">튜터</option>
-              <% @tutors.each do |tutor| %>
-                <option value="<%= tutor.id %>"><%= tutor.name %></option>
-              <% end %>
-            </select>
-          </div>
-        </div>
-        <div class="col col-3" style="padding-top: 50px">
-          <button class="btn btn-outline-dark">검색</button>
-        </div>
+<%= form_with url: student_lessons_schedule_enter_path , method: :get do |form| %>
+  <div class="row">
+    <div class="col">
+      <div class="search">
+        <%= form.label :lesson_type, "수업 길이 선택:" %>
+        <%= form.select :lesson_type, [["20분", 1], ["40분", 2]], selected: 1  %>
+        <br><br>
+        <%= form.label :tutor, "튜터 선택:" %>
+        <%= form.collection_select :tutor, Tutor.order(:id), :id, :name%>
       </div>
-    </form>
-  </div>
-  <br>
-  <% if @schedules %>
-    <div class="col col-6">
-      <table class="bbs_table">
-        <thead>
-        <tr>
-          <th scope="col">튜터 id</th>
-          <th scope="col">수업 시작 시간</th>
-          <th scope="col">가능 여부</th>
-          <th scope="col">예약 버튼</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% @schedules.each do |schedule| %>
-          <div id="<%= dom_id schedule %>">
-            <form action="/student/lessons/schedule-enter" mothod="POST">
-              <tr>
-                <td> <%= schedule.tutor_id %> </td>
-                <td> <%= schedule.start_time %> </td>
-                <% if schedule.active === 1 %>
-                  <td> Available </td>
-                <% else %>
-                  <td> Unavailable </td>
-                <% end %>
-                <button>예약하기</button>
-              </tr>
-            </form>
-          </div>
-        <% end %>
-        </tbody>
-      </table>
     </div>
-  <% end %>
-</div>
+    <div class="col" style="padding-top: 80px">
+      <%= form.submit class:"btn btn-outline-dark" %>
+    </div>
+  </div>
+<% end %>
+
