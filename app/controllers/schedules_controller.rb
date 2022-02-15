@@ -3,6 +3,9 @@ class SchedulesController < ApplicationController
 
   # GET /student/lessons/schedule-enter
   def index
+
+    p Tutor.first.tutor_schedules.recent(params[:select_date])
+
     # all Tutors
     @tutors = Tutor.all
     # today Date

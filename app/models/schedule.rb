@@ -1,4 +1,5 @@
 class Schedule < ApplicationRecord
-  has_many :tutor
-  has_many :user
+  validates :tutor_id, :start_time, :lesson_type, :user_id, presence: true
+  belongs_to :tutor
+  belongs_to :user
 end
