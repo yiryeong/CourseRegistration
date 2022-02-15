@@ -28,7 +28,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_13_043512) do
     t.integer "active", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["start_time"], name: "index_tutor_schedules_on_start_time", unique: true
     t.index ["tutor_id"], name: "index_tutor_schedules_on_tutor_id"
   end
 

@@ -7,6 +7,5 @@ class CreateTutorSchedules < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    add_index :tutor_schedules, :start_time, unique: true
   end
 end
