@@ -3,55 +3,33 @@ class SchedulesController < ApplicationController
 
   # GET /student/lessons/schedule-enter
   def index
-
-    p Tutor.first.tutor_schedules.recent(params[:select_date])
-
     # all Tutors
     @tutors = Tutor.all
     # today Date
     @today = Date.today
+
     # lesson_type =>  1: 20분 , 2 => 40분
     lesson_type = params[:lesson_type]
 
-    # search Params hash
-    search_params = Hash.new
-
-    # if want to search tutor add tutor params to search_params
-    if params[:tutor].present?
-      unless params[:tutor].empty?
-        search_params["tutor_id"] = params[:tutor]
-      end
-    end
-
-    # if want to search date range ( a week ), add date range to search_params
+    selected_date  = @today
     if params[:select_date].present?
-      start_date = params[:select_date].to_datetime.at_beginning_of_week(start_day = :sunday)
-      end_date = params[:select_date].to_datetime.at_end_of_week(start_day = :sunday)
-    else
-      # default date range : this week
-      start_date = @today.to_datetime.at_beginning_of_week(start_day = :sunday)
-      end_date = @today.to_datetime.at_end_of_week(start_day = :sunday)
+      selected_date = params[:select_date]
     end
-
-    # search date range
-    search_params["start_time"] = start_date..end_date
 
     # retrieved tutor schedules data
-    tutor_schedules = TutorSchedule.where(search_params)
+    tutor_schedules = TutorSchedule.recent(selected_date)
+
+    if params[:tutor].present?
+      unless params[:tutor].empty?
+        tutor_schedules =  Tutor.find(params[:tutor]).tutor_schedules.recent(selected_date)
+      end
+    end
 
     # response/return tutor schedule data
     @schedules = Array.new
 
-    # response.each do |schedule|
-    #   tutor_id = schedule.tutor_id
-    #   schedule = schedule.as_json
-    #   schedule['tutor_name'] = Tutor.find(tutor_id).name
-    #   @schedules.append(schedule)
-    # end
-
-    date = start_date
+    date = start_week(selected_date)
     day = 0
-    wday_array = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday]
 
     # process retrieved week's data
     7.times do
@@ -95,15 +73,16 @@ class SchedulesController < ApplicationController
           if params[:tutor].present?
             tutor_name = Tutor.find(params[:tutor]).name
           else
-            tutor_name = 'All'
+            s.tutor = Tutor.new
+            s.tutor.name="All"
           end
         end
 
-        schedule['tutor_name'] = tutor_name
-        schedule['date'] = date.strftime("%Y-%m-%d")
-        schedule['time'] = date.strftime("%H:%M:%S")
-        schedule['wday'] = wday_array[date.wday]
-        @schedules.append(schedule)
+        # schedule['tutor_name'] = tutor_name
+        # schedule['date'] = date.strftime("%Y-%m-%d")
+        # schedule['time'] = date.strftime("%H:%M:%S")
+        # schedule['wday'] = wday_array[date.wday]
+        @schedules.append(s)
 
         date += 30.minute
         minute += 1
@@ -155,6 +134,10 @@ class SchedulesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_schedule
       @reserved_schedule = Schedule.find(params[:id])
+    end
+
+    def start_week(selected_date)
+      selected_date.to_datetime.at_beginning_of_week(start_day = :sunday)
     end
 
     # Only allow a list of trusted parameters through.
