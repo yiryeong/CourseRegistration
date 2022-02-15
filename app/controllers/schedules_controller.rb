@@ -95,7 +95,7 @@ class SchedulesController < ApplicationController
 
         schedule['tutor_name'] = tutor_name
         schedule['date'] = date.strftime("%Y-%m-%d")
-        schedule['time'] = date.strftime("%H-%M-%S")
+        schedule['time'] = date.strftime("%H:%M:%S")
         schedule['wday'] = wday_array[date.wday]
         @schedules.append(schedule)
 
