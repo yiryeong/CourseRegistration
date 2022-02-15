@@ -2,13 +2,26 @@
 
 <h1>Tutor schedules</h1>
 
+<%= link_to "New tutor schedule", new_tutor_schedule_path %>
+<br><br>
 <div id="tutor_schedules">
-  <% @tutor_schedules.each do |tutor_schedule| %>
-    <%= render tutor_schedule %>
-    <p>
-      <%= link_to "Show this tutor schedule", tutor_schedule %>
-    </p>
-  <% end %>
+  <table class="bbs_table">
+    <thead>
+      <tr>
+        <td scope="col">Tutor ID</td>
+        <td scope="col">Start Time</td>
+        <td scope="col">Active</td>
+        <td scope="col">Show</td>
+      </tr>
+    </thead>
+    <tbody>
+        <% @tutor_schedules.each do |tutor_schedule| %>
+          <%= render tutor_schedule %>
+<!--          <p>-->
+            <%#= link_to "Show this tutor schedule", tutor_schedule %>
+<!--          </p>-->
+        <% end %>
+    </tbody>
+  </table>
 </div>
 
-<%= link_to "New tutor schedule", new_tutor_schedule_path %>

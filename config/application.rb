@@ -12,8 +12,8 @@ module CourseRegistration
     config.load_defaults 7.0
 
     config.i18n.default_locale = :ko
-    config.active_record.default_timezone = :local
     config.beginning_of_week = :sunday
+    # config.time_zone = 'Seoul'
 
     # Configuration for the application, engines, and railties goes here.
     #

@@ -3,24 +3,40 @@ class SchedulesController < ApplicationController
 
   # GET /student/lessons/schedule-enter
   def index
+    # all Tutors
     @tutors = Tutor.all
+    # today Date
     @today = Date.today
-    lessons_type = params[:lesson_type]
+    # lesson_type =>  1: 20분 , 2 => 40분
+    lesson_type = params[:lesson_type]
 
+    # search Params hash
     search_params = Hash.new
 
+    # if want to search tutor add tutor params to search_params
     if params[:tutor].present?
       unless params[:tutor].empty?
         search_params["tutor_id"] = params[:tutor]
       end
     end
 
-    start_date = params[:select_date].to_datetime.at_beginning_of_week(start_day = :sunday)
-    end_date = params[:select_date].to_datetime.at_end_of_week(start_day = :sunday)
+    # if want to search date range ( a week ), add date range to search_params
+    if params[:select_date].present?
+      start_date = params[:select_date].to_datetime.at_beginning_of_week(start_day = :sunday)
+      end_date = params[:select_date].to_datetime.at_end_of_week(start_day = :sunday)
+    else
+      # default date range : this week
+      start_date = @today.to_datetime.at_beginning_of_week(start_day = :sunday)
+      end_date = @today.to_datetime.at_end_of_week(start_day = :sunday)
+    end
+
+    # search date range
     search_params["start_time"] = start_date..end_date
 
+    # retrieved tutor schedules data
     tutor_schedules = TutorSchedule.where(search_params)
 
+    # response/return tutor schedule data
     @schedules = Array.new
 
     # response.each do |schedule|
@@ -32,23 +48,55 @@ class SchedulesController < ApplicationController
 
     date = start_date
     day = 0
-    while day < 7
+    wday_array = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday]
+
+    # process retrieved week's data
+    7.times do
       minute = 0
-      while minute < 48
+      48.times do
         s = tutor_schedules.select {|n| n["start_time"] == date}
 
         if s.present?
           tutor_id = s[0].tutor_id
+          # change schedule type to json
           schedule = s[0].as_json
-          schedule['tutor_name'] = Tutor.find(tutor_id).name
+
+          # if lesson_type is 40 minute
+          if lesson_type == '2'
+            # select next tutor schedule
+            next_s = tutor_schedules.select {|n| n["start_time"] == (date + 30.minute)}
+
+            # if lesson_type is 40 minute, check next_schedule is null
+            # if next_schedule is null change current_schedule to Unavailable
+            # if next_schedule exist and next_schedule.active is Unavailanle, change current_schedule to Unavailable
+            if next_s[0].nil?
+              schedule['active'] = 2
+            else
+              p next_s[0].active
+              unless next_s[0].active == 1
+                schedule['active'] = 2
+              end
+            end
+          end
+          tutor_name = Tutor.find(tutor_id).name
+
         else
+          # if select date not have tutor schedules
+          # new one tutor schedule
           s = TutorSchedule.new
           s.start_time = date
           schedule = s.as_json
           if params[:tutor].present?
-            schedule['tutor_name'] = Tutor.find(params[:tutor]).name
+            tutor_name = Tutor.find(params[:tutor]).name
+          else
+            tutor_name = 'All'
           end
         end
+
+        schedule['tutor_name'] = tutor_name
+        schedule['date'] = date.strftime("%Y-%m-%d")
+        schedule['time'] = date.strftime("%H-%M-%S")
+        schedule['wday'] = wday_array[date.wday]
         @schedules.append(schedule)
 
         date += 30.minute
@@ -56,9 +104,6 @@ class SchedulesController < ApplicationController
       end
       day += 1
     end
-
-    end
-
   end
 
   # GET /student/lessons/schedule-enter/1
@@ -110,3 +155,4 @@ class SchedulesController < ApplicationController
     def schedule_params
       params.permit(:tutor_id, :user_id, :start_time, :lesson_type)
     end
+end

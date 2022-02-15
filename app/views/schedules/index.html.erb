@@ -77,6 +77,8 @@
       <thead>
       <tr>
         <th scope="col">튜터 이름</th>
+        <th scope="col">요일</th>
+        <th scope="col">날짜</th>
         <th scope="col">수업 시작 시간</th>
         <th scope="col">가능 여부</th>
         <th scope="col">예약 버튼</th>
@@ -87,7 +89,9 @@
           <% @schedules.each do |schedule| %>
             <tr>
               <td> <%= schedule['tutor_name'] %> </td>
-              <td> <%= schedule['start_time'] %> </td>
+              <td> <%= schedule['wday'] %> </td>
+              <td> <%= schedule['date'] %> </td>
+              <td> <%= schedule['time'] %> </td>
               <% if schedule['active'] === 1 %>
                 <td> Available </td>
                 <td><%= button_to '예약하기', student_lessons_schedule_enter_path, method: :post, params: {tutor_id: schedule["tutor_id"], lesson_type: @lessons_type, start_time: schedule["start_time"], user_id: current_user.id} %></td>

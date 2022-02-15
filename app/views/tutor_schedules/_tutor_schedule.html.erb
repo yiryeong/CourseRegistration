@@ -1,17 +1,24 @@
 <div id="<%= dom_id tutor_schedule %>">
-  <p>
-    <strong>Tutor:</strong>
-    <%= tutor_schedule.tutor_id %>
-  </p>
+<!--  <p>-->
+<!--    <strong>Tutor:</strong>-->
+    <%#= tutor_schedule.tutor_id %>
+<!--  </p>-->
 
-  <p>
-    <strong>Start time:</strong>
-    <%= tutor_schedule.start_time %>
-  </p>
+<!--  <p>-->
+<!--    <strong>Start time:</strong>-->
+    <%#= tutor_schedule.start_time %>
+<!--  </p>-->
 
-  <p>
-    <strong>Active:</strong>
-    <%= tutor_schedule.active %>
-  </p>
-
+<!--  <p>-->
+<!--    <strong>Active:</strong>-->
+    <%#= tutor_schedule.active %>
+<!--  </p>-->
+  <tr>
+    <td><%= tutor_schedule.tutor_id %></td>
+    <td><%= tutor_schedule.start_time %></td>
+    <td><%= tutor_schedule.active %></td>
+    <td><%= link_to "Show this tutor schedule", tutor_schedule %></td>
+  </tr>
 </div>
+
+
