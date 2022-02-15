@@ -68,12 +68,15 @@ class SchedulesController < ApplicationController
 
             # if lesson_type is 40 minute, check next_schedule is null
             # if next_schedule is null change current_schedule to Unavailable
-            # if next_schedule exist and next_schedule.active is Unavailanle, change current_schedule to Unavailable
+            # if next_schedule exist, same tutor and next_schedule.active is Unavailanle, change current_schedule to Unavailable
             if next_s[0].nil?
               schedule['active'] = 2
             else
-              p next_s[0].active
-              unless next_s[0].active == 1
+              if next_s[0].tutor_id == tutor_id
+                if next_s[0].active == 2
+                  schedule['active'] = 2
+                end
+              else
                 schedule['active'] = 2
               end
             end
