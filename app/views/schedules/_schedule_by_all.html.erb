@@ -3,10 +3,10 @@
     <div class="col">
       <div class="search">
         <%= form.label :lesson_type, "수업 길이 선택:" %>
-        <%= form.select :lesson_type, [["20분", 1], ["40분", 2]], selected: 1  %>
+        <%= form.select :lesson_type, [["20분", 1], ["40분", 2]], selected: @lesson_type  %>
         <br><br>
         <%= form.label :select_date, "날짜 선택:" %>
-        <%= form.date_field :select_date, min: @today, value: @today %>
+        <%= form.date_field :select_date, min: @today, value: @selected_date %>
         <br><br>
         <%= form.label :tutor, "튜터 선택:" %>
         <%= form.collection_select :tutor, @tutors, :id, :name, :include_blank => "All" %>

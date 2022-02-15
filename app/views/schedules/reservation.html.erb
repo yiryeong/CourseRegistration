@@ -1,0 +1,32 @@
+<div class="col col-6">
+  <table class="bbs_table">
+    <thead>
+    <tr>
+      <th scope="col">튜터 이름</th>
+      <th scope="col">요일</th>
+      <th scope="col">날짜</th>
+      <th scope="col">수업 시작 시간</th>
+      <th scope="col">수업 길이</th>
+      <th scope="col">취소 버튼</th>
+    </tr>
+    </thead>
+    <% if @reserved_schedules %>
+      <tbody>
+      <% @reserved_schedules.each do |schedule| %>
+        <tr>
+          <td> <%= schedule["tutor_name"] %> </td>
+          <td> <%= schedule['wday'] %> </td>
+          <td> <%= schedule['date'] %> </td>
+          <td> <%= schedule['time'] %> </td>
+          <td> <%= schedule['lesson_type'] %> </td>
+          <td><%= button_to '취소하기', student_lessons_reservation_path,  params: { :id => schedule["id"] }, method: :delete  %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    <% else %>
+      <tbody>
+      <tr> <td>조회 데이터가 없습니다. </td> </tr>
+      </tbody>
+    <% end %>
+  </table>
+</div>

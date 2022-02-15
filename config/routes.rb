@@ -20,4 +20,7 @@ Rails.application.routes.draw do
   get "/student/lessons/schedule-enter" => "schedules#index"
   post "/student/lessons/schedule-enter" => "schedules#create"
 
+  get "/student/lessons/reservation" => "schedules#reservation"
+  delete "/student/lessons/reservation" => "schedules#destroy_reservation"
+
 end

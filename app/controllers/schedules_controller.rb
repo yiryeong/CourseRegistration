@@ -1,5 +1,5 @@
 class SchedulesController < ApplicationController
-  before_action :set_schedule, only: %i[ show edit update destroy ]
+  before_action :set_schedule, only: %i[ show destroy_reservation ]
 
   # GET /student/lessons/schedule-enter
   def index
@@ -9,11 +9,11 @@ class SchedulesController < ApplicationController
     @today = Date.today
 
     # lesson_type =>  1: 20분 , 2 => 40분
-    lesson_type = params[:lesson_type]
+    @lesson_type = params[:lesson_type]
 
-    selected_date  = @today
+    @selected_date  = @today
     if params[:select_date].present?
-      selected_date = params[:select_date]
+      @selected_date = params[:select_date]
     end
 
     # Get Tutor List.
@@ -29,8 +29,7 @@ class SchedulesController < ApplicationController
 
     tutors.each { |tutor|
       tutor_schedule_list = tutor.tutor_schedules
-      reserved_schedules = tutor.schedules
-      date = start_week(selected_date)
+      date = start_week(@selected_date)
 
       (7*48).times do
         t_schedule = tutor_schedule_list.select {|n| n["start_time"] == date}.first
@@ -42,7 +41,7 @@ class SchedulesController < ApplicationController
           # if lesson_type is 40 minute, check next_schedule is null
           # if next_schedule is null, change current_schedule to Unavailable
           # if next_schedule exist, same tutor and next_schedule.active is Unavailanle, change current_schedule to Unavailable
-          if lesson_type == 2
+          if @lesson_type == 2
             next_t_schedule = tutor_schedule_list.select {|n| n["start_time"] == date+30.minutes}.first
             if next_t_schedule.present?
               unless next_t_schedule.active == 1
@@ -64,61 +63,20 @@ class SchedulesController < ApplicationController
         date += 30.minutes
       end
     }
+  end
 
+  def reservation
+    reserved_schedules = User.find(current_user.id).schedules
 
-
-
-
-
-    # process retrieved week's data
-    # 7.times do
-    #   48.times do
-    #     s = tutor_schedules.select {|n| n["start_time"] == date}.first
-    #
-    #     if s.present?
-    #       tutor_id = s.tutor_id
-    #       # change to json
-    #       s_json = s.as_json
-    #
-    #       # if lesson_type is 40 minute
-    #       if lesson_type == '2'
-    #         # select next tutor schedule
-    #         next_s = tutor_schedules.select {|n| n["start_time"] == (date + 30.minute)}
-    #
-    #         # if lesson_type is 40 minute, check next_schedule is null
-    #         # if next_schedule is null change current_schedule to Unavailable
-    #         # if next_schedule exist, same tutor and next_schedule.active is Unavailanle, change current_schedule to Unavailable
-    #
-    #         # if next_s[0].nil?
-    #         #   s_json["active"] = 2
-    #         # else
-    #         #   if next_s[0].tutor_id == tutor_id
-    #         #     if next_s[0].active == 2
-    #         #       s_json["active"] = 2
-    #         #     end
-    #         #   else
-    #         #     s_json["active"] = 2
-    #         #   end
-    #         # end
-    #       end
-    #       s_json["tutor_name"] = s.get_tutor_name
-    #     else
-    #       # if select date not have tutor schedules
-    #       # new one tutor schedule
-    #       s = TutorSchedule.new
-    #       s.start_time = date
-    #       s_json = s.as_json
-    #       s_json["tutor_name"]="All"
-    #     end
-    #
-    #     s_json["date"] = s.get_date
-    #     s_json["time"] = s.get_time
-    #     s_json["wday"] = s.get_wday
-    #     @schedules.append(s_json)
-    #
-    #     date += 30.minute
-    #   end
-    # end
+    @reserved_schedules = Array.new
+    reserved_schedules.each do |r_schedule|
+      r_schedule_json = r_schedule.as_json
+      r_schedule_json['tutor_name'] = r_schedule.get_tutor_name
+      r_schedule_json['wday'] = r_schedule.get_wday
+      r_schedule_json['date'] = r_schedule.get_date
+      r_schedule_json['time'] = r_schedule.get_time
+      @reserved_schedules.append(r_schedule_json)
+    end
   end
 
   # GET /student/lessons/schedule-enter/1
@@ -142,35 +100,59 @@ class SchedulesController < ApplicationController
     # @tutor_schedule.update(active: 2)
     # redirect_to student_lessons_schedule_enter_url(@reserved_schedule), notice: "Schedule was successfully created."
 
-    @reserved_schedule = Schedule.new(schedule_params)
+    @reservation_schedule = Schedule.new(schedule_params)
+    @lesson_type = 1
 
-    if @reserved_schedule.save
+    if params[:lesson_type].present?
+      @lesson_type = params[:lesson_type]
+    end
 
-      tutor_schedule = TutorSchedule.where(tutor_id: @reserved_schedule.tutor_id, start_time: @reserved_schedule.start_time)
+    @reservation_schedule.lesson_type = @lesson_type
+
+    if @reservation_schedule.save
+
+      tutor_schedule = TutorSchedule.where(tutor_id: @reservation_schedule.tutor_id, start_time: @reservation_schedule.start_time)
       tutor_schedule.update(active: 2)
 
-      if @reserved_schedule.lesson_type == 2
-        tutor_schedule = TutorSchedule.where(tutor_id: @reserved_schedule.tutor_id, start_time: @reserved_schedule.start_time + 30.minutes)
+      if @reservation_schedule.lesson_type == 2
+        tutor_schedule = TutorSchedule.where(tutor_id: @reservation_schedule.tutor_id, start_time: @reservation_schedule.start_time + 30.minutes)
         tutor_schedule.update(active: 2)
       end
 
       respond_to do |format|
-        format.html { redirect_to student_lessons_schedule_enter_url(@reserved_schedule), notice: "Schedule was successfully created." }
-        format.json { render :show, status: :created, location: @reserved_schedule }
-      end
-    else
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @reserved_schedule.errors, status: :unprocessable_entity }
+        format.html { redirect_to student_lessons_reservation_path(@reservation_schedule), notice: "Schedule was successfully created." }
+        format.json { render :show, status: :created, location: @reservation_schedule }
       end
     end
   end
 
+  # DELETE /student/lessons/reservation/1
+  def destroy_reservation
+
+    tutor_schedule = TutorSchedule.where(tutor_id: @reservation_schedule.tutor_id, start_time: @reservation_schedule.start_time)
+    tutor_schedule.update(active: 1)
+
+    if @reservation_schedule.lesson_type == 2
+      tutor_schedule = TutorSchedule.where(tutor_id: @reservation_schedule.tutor_id, start_time: @reservation_schedule.start_time + 30.minutes)
+      tutor_schedule.update(active: 1)
+    end
+
+    respond_to do |format|
+      if @reservation_schedule.destroy
+
+        format.html { redirect_to student_lessons_schedule_enter_url, notice: "schedule was successfully destroyed." }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to student_lessons_schedule_enter_url:, status: :unprocessable_entity }
+        format.json { render json: @reservation_schedule.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_schedule
-      @reserved_schedule = Schedule.find(params[:id])
+      @reservation_schedule = Schedule.find(params[:id])
     end
 
     def start_week(selected_date)

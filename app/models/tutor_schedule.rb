@@ -8,20 +8,4 @@ class TutorSchedule < ApplicationRecord
                                           select_date.to_datetime.at_beginning_of_week(start_day = :sunday),
                                           select_date.to_datetime.at_end_of_week(start_day = :sunday) ) }
 
-  def get_date
-    start_time.strftime("%Y-%m-%d")
-  end
-
-  def get_time
-    start_time.strftime("%H:%M:%S")
-  end
-
-  def get_wday
-    start_time .strftime("%a")
-  end
-
-  def get_tutor_name
-    tutor.name
-  end
-
 end

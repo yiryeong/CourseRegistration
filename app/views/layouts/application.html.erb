@@ -32,6 +32,9 @@
           <%= link_to "수업 스케줄로 이동", tutor_schedules_path, class:"nav-link" %>
           <br>
           <%= link_to "수강신청 하로 가기", student_lessons_schedule_enter_path, class:"nav-link" %>
+          <br>
+          <%= link_to "예약 정보로 이동", student_lessons_reservation_path, class:"nav-link" %>
+          <br>
           <% if current_user.admin? %>
             <br>
             <%= link_to "어드민 페이지로 이동", rails_admin_path, class:"nav-link" %>
