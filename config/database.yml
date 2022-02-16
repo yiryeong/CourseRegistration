@@ -17,7 +17,7 @@ default: &default
   password: django
   socket: /tmp/mysql.sock
   database: ringle_db
-  host: 13.125.214.57
+  host: 15.165.136.41
   port: 3306
 
 development:
