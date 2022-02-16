@@ -9,7 +9,7 @@ class SchedulesController < ApplicationController
     @today = Date.today
 
     # lesson_type =>  1: 20분 , 2 => 40분
-    @lesson_type = params[:lesson_type]
+    @lesson_type = params[:lesson_type].to_i
 
     @selected_date  = @today
     if params[:select_date].present?
@@ -34,6 +34,7 @@ class SchedulesController < ApplicationController
       (7*48).times do
         t_schedule = tutor_schedule_list.select {|n| n["start_time"] == date}.first
 
+
         if t_schedule.present?
           # change to json
           schedule_json = t_schedule.as_json
@@ -47,6 +48,8 @@ class SchedulesController < ApplicationController
               unless next_t_schedule.active == 1
                 schedule_json['active'] = 2
               end
+            else
+              schedule_json['active'] = 2
             end
           end
         else
@@ -75,6 +78,12 @@ class SchedulesController < ApplicationController
       r_schedule_json['wday'] = r_schedule.get_wday
       r_schedule_json['date'] = r_schedule.get_date
       r_schedule_json['time'] = r_schedule.get_time
+      p "d", r_schedule_json['lesson_type']
+      if r_schedule_json['lesson_type'] == 1
+        r_schedule_json["lesson_type_str"] = "20분"
+      else
+        r_schedule_json["lesson_type_str"] = "40분"
+      end
       @reserved_schedules.append(r_schedule_json)
     end
   end
@@ -103,8 +112,11 @@ class SchedulesController < ApplicationController
     @reservation_schedule = Schedule.new(schedule_params)
     @lesson_type = 1
 
+    p "lesson type present?", params[:lesson_type].present?
+
     if params[:lesson_type].present?
-      @lesson_type = params[:lesson_type]
+      p "check1"
+      @lesson_type = params[:lesson_type].to_i
     end
 
     @reservation_schedule.lesson_type = @lesson_type

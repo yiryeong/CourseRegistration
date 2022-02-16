@@ -18,7 +18,7 @@
           <td> <%= schedule['wday'] %> </td>
           <td> <%= schedule['date'] %> </td>
           <td> <%= schedule['time'] %> </td>
-          <td> <%= schedule['lesson_type'] %> </td>
+          <td> <%= schedule['lesson_type_str'] %> </td>
           <td><%= button_to '취소하기', student_lessons_reservation_path,  params: { :id => schedule["id"] }, method: :delete  %></td>
         </tr>
       <% end %>

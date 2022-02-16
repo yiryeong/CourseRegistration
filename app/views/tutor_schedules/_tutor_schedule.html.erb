@@ -17,7 +17,9 @@
     <td><%= tutor_schedule.tutor_id %></td>
     <td><%= tutor_schedule.start_time %></td>
     <td><%= tutor_schedule.active %></td>
-    <td><%= link_to "Show this tutor schedule", tutor_schedule %></td>
+    <td><%= link_to "Edit this tutor schedule", edit_tutor_schedule_path(tutor_schedule) %></td>
+    <td><%= button_to "Destroy this tutor schedule", tutor_schedule, method: :delete %></td>
+<!--    <td><%#= link_to "Show this tutor schedule", tutor_schedule %></td>-->
   </tr>
 </div>
 
